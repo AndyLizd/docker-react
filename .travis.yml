@@ -3,7 +3,20 @@ services:
   - docker 
 
 before_install:
-  - docker build -t andylizd/docker-react-test -f Dockerfile.dev .
+  - docker build -t andylizd/docker-react -f Dockerfile.dev .
 
 script:
-  - docker run -e CI=true andylizd/docker-react-test npm run test
+  - docker run -e CI=true andylizd/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker"
+  env: "Docker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-312349222585"
+  bucker_path: "docker"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: "$AWS_SECRET_KEY"
